@@ -1,26 +1,466 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ───────────────────────────────────────────────────────────
+   MasterVLSI design tokens — see docs/THEME.md
+   Light, friendly ed-tech theme. Token names are roles:
+   ink = strong surface/text, paper = base, volt = primary.
+   ─────────────────────────────────────────────────────────── */
+@theme {
+  --color-ink: #1b2124;
+  --color-ink-2: #2a3136;
+  --color-ink-3: #f5f3ff;
+  --color-edge: #e4e7ec;
+  --color-edge-2: #d0d5dd;
+  --color-paper: #ffffff;
+  --color-mist: #f8f8f8;
+  --color-rule: #e4e7ec;
+  --color-dim: #5f6570;
+  --color-slate: #5f6570;
+  --color-volt: #5a4bda;
+  --color-volt-hot: #7a5af8;
+  --color-volt-deep: #4f2fe0;
+  --color-signal: #12b76a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-reddit), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: var(--font-reddit), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-reddit), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Tinted sections: surfaces inside become white cards, text stays dark. */
+.on-dark,
+.on-dark-2 {
+  --color-ink: #ffffff;
+  --color-ink-2: #ffffff;
+  --color-paper: #1b2124;
+}
+
+/* The one truly dark band (footer). */
+.on-night {
+  --color-ink: #1b2124;
+  --color-ink-2: #232a2e;
+  --color-edge: #343c42;
+  --color-edge-2: #4a535a;
+  --color-paper: #ffffff;
+  --color-dim: #b3bac2;
+  --color-volt: #a89cff;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: #1b2124;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+::selection {
+  background: #5a4bda;
+  color: #ffffff;
+}
+
+:focus-visible {
+  outline: 2px solid #5a4bda;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Component styles live in the components layer so Tailwind utilities can override them. */
+@layer components {
+  /* ── Layout ───────────────────────────────────────────── */
+  .wrap {
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
+  @media (min-width: 768px) {
+    .wrap {
+      padding-inline: 40px;
+    }
+  }
+
+  .section {
+    padding-block: 56px;
+  }
+  @media (min-width: 1024px) {
+    .section {
+      padding-block: 88px;
+    }
+  }
+
+  .on-dark {
+    background: #f8f7ff;
+    color: #1b2124;
+  }
+  .on-dark-2 {
+    background: #f1f5fe;
+    color: #1b2124;
+  }
+  .on-light {
+    background: #ffffff;
+    color: #1b2124;
+  }
+  .on-mist {
+    background: #f8f8f8;
+    color: #1b2124;
+  }
+  .on-night {
+    background: #1b2124;
+    color: #ffffff;
+  }
+
+  /* ── Type ─────────────────────────────────────────────── */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .t-hero {
+    font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+    line-height: 1.12;
+  }
+  .t-1 {
+    font-size: clamp(1.7rem, 2.9vw, 2.4rem);
+  }
+  .t-2 {
+    font-size: clamp(1.35rem, 2vw, 1.75rem);
+    line-height: 1.2;
+  }
+  .t-3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.3;
+  }
+  .lede {
+    font-size: clamp(1rem, 1.2vw, 1.125rem);
+    line-height: 1.6;
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #5a4bda;
+    background: #ecebff;
+    padding: 5px 12px;
+    border-radius: 999px;
+  }
+  .on-night .eyebrow {
+    background: transparent;
+    padding: 0;
+    color: #b3bac2;
+  }
+  .mono {
+    font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums;
+  }
+  .muted {
+    color: #5f6570;
+  }
+  .on-night .muted {
+    color: #b3bac2;
+  }
+  .accent {
+    color: #5a4bda;
+  }
+
+  /* ── Buttons ──────────────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0 24px;
+    font-weight: 600;
+    font-size: 1rem;
+    white-space: nowrap;
+    border: 1.5px solid transparent;
+    border-radius: 8px;
+    transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease,
+      box-shadow 0.18s ease, transform 0.18s ease;
+    cursor: pointer;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn-primary {
+    background: #5a4bda;
+    color: #ffffff;
+    border-color: #5a4bda;
+  }
+  .btn-primary:hover {
+    background: #4437b8;
+    border-color: #4437b8;
+    box-shadow: 0 6px 16px rgba(90, 75, 218, 0.28);
+  }
+  .btn-ghost {
+    background: #ffffff;
+    color: #5a4bda;
+    border-color: #5a4bda;
+  }
+  .btn-ghost:hover {
+    background: #f1efff;
+  }
+  .btn-dark {
+    background: #ffffff;
+    color: #5a4bda;
+    border-color: #ffffff;
+  }
+  .btn-dark:hover {
+    background: #f1efff;
+    border-color: #f1efff;
+  }
+  .btn-onvolt {
+    background: transparent;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+  .btn-onvolt:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: #ffffff;
+  }
+  .btn-sm {
+    min-height: 40px;
+    padding: 0 18px;
+    font-size: 0.92rem;
+  }
+  .arrow-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: #5a4bda;
+    border-bottom: 1.5px dashed #5a4bda;
+    padding-bottom: 2px;
+    transition: gap 0.18s ease;
+  }
+  .arrow-link:hover {
+    gap: 10px;
+  }
+
+  /* ── Surfaces ─────────────────────────────────────────── */
+  .card {
+    position: relative;
+    border: 1px solid #e4e7ec;
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 24px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover {
+    border-color: #c9c3f5;
+    box-shadow: 0 10px 28px rgba(27, 33, 36, 0.08);
+    transform: translateY(-2px);
+  }
+
+  /* Card grids: every direct child becomes a rounded white card. */
+  .cells > * {
+    background: #ffffff;
+    border: 1px solid #e4e7ec;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .cells > *:hover {
+    border-color: #c9c3f5;
+    box-shadow: 0 10px 28px rgba(27, 33, 36, 0.07);
+  }
+
+  .hairline {
+    border-color: #e4e7ec;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #f1efff;
+    color: #5a4bda;
+  }
+
+  /* Soft gradient wash behind heroes */
+  .grid-bg {
+    background: radial-gradient(60% 90% at 85% 10%, #fde8f6 0%, transparent 60%),
+      radial-gradient(50% 80% at 10% 100%, #e3f0ff 0%, transparent 60%),
+      linear-gradient(100deg, #f1efff 0%, #f8f3ff 50%, #eef4ff 100%);
+  }
+
+  /* ── Tables ───────────────────────────────────────────── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.97rem;
+  }
+  .data-table th {
+    text-align: left;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #5f6570;
+    padding: 12px 16px;
+    background: #f8f7ff;
+    border-bottom: 1px solid #e4e7ec;
+  }
+  .data-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e4e7ec;
+    vertical-align: top;
+  }
+
+  /* ── Forms ────────────────────────────────────────────── */
+  .field label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #1b2124;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 11px 14px;
+    background: #ffffff;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    color: #1b2124;
+    font: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: #5a4bda;
+    box-shadow: 0 0 0 3px rgba(90, 75, 218, 0.16);
+  }
+
+  /* ── FAQ ──────────────────────────────────────────────── */
+  .faq {
+    border-top: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .faq details {
+    background: #ffffff;
+    border: 1px solid #e4e7ec;
+    border-radius: 12px;
+    padding: 0 20px;
+  }
+  .faq summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 18px 0;
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq summary::after {
+    content: "+";
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #5a4bda;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  .faq details[open] summary::after {
+    transform: rotate(45deg);
+  }
+  .faq details p {
+    padding: 0 0 20px;
+    max-width: 68ch;
+    color: #5f6570;
+  }
+
+  /* ── Motion ───────────────────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 60s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes trace {
+    to {
+      stroke-dashoffset: -240;
+    }
+  }
+  .trace {
+    stroke-dasharray: 18 222;
+    animation: trace 3.4s linear infinite;
+  }
+  @keyframes pulse-block {
+    0%,
+    100% {
+      opacity: 0.25;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  .pulse {
+    animation: pulse-block 3s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .marquee-track,
+    .trace,
+    .pulse {
+      animation: none;
+    }
+    .card:hover {
+      transform: none;
+    }
+  }
 }
